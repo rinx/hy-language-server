@@ -1,0 +1,5 @@
+/build
+/dist
+
+/hy_language_server.egg-info
+/hyls/__pycache__
