@@ -18,6 +18,8 @@ Note: Currently, these features are available only for Hy's built-in core functi
 $ pip install hy-language-server
 ```
 
+`hyls` will be installed under your PATH.
+
 ## license
 
 MIT
