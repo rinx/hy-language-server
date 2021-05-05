@@ -3,3 +3,6 @@
 
 /hy_language_server.egg-info
 /hyls/__pycache__
+/hyls/*.py
+!/hyls/__init__.py
+!/hyls/__main__.py
