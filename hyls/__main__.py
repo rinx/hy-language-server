@@ -20,7 +20,7 @@ def main():
     args = parser.parse_args()
 
     if args.version:
-        print('hy language server v0.0.1')
+        print('hy language server v0.0.4')
         return
 
     srv = Server()

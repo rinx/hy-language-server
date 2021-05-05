@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='hy-language-server',
-    version='0.0.1',
+    version='0.0.4',
     author='Rintaro Okamura',
     author_email='rintaro.okamura@gmail.com',
     description='hy language server using Jedhy',
