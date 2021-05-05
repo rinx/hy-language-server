@@ -27,13 +27,13 @@
 
 (defn cursor-word [ls uri ln cn]
   (let [line (cursor-line ls uri ln)]
-    (for [m (re.finditer r"\w+" line)]
+    (for [m (re.finditer r"[\.\?a-zA-Z0-9_]+" line)]
       (when (and (<= (m.start) cn) (<= cn (m.end)))
         (return (cut line (m.start) cn))))))
 
 (defn cursor-word-all [ls uri ln cn]
   (let [line (cursor-line ls uri ln)]
-    (for [m (re.finditer r"\w+" line)]
+    (for [m (re.finditer r"[\.\?a-zA-Z0-9_]+" line)]
       (when (and (<= (m.start) cn) (<= cn (m.end)))
         (return (cut line (m.start) (m.end)))))))
 

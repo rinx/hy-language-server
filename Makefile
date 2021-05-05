@@ -28,3 +28,7 @@ prepare-dist: \
 	$(PIP) install --upgrade pip setuptools wheel twine
 	$(PYTHON) setup.py sdist
 	$(PYTHON) setup.py bdist_wheel
+
+.PHONY: publish
+publish:
+	twine upload --repository pypi dist/*
