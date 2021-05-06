@@ -27,15 +27,26 @@
 
 (defn cursor-word [ls uri ln cn]
   (let [line (cursor-line ls uri ln)]
-    (for [m (re.finditer r"[\.\?a-zA-Z0-9_]+" line)]
+    (for [m (re.finditer r"[\.\?\w]+" line)]
       (when (and (<= (m.start) cn) (<= cn (m.end)))
         (return (cut line (m.start) cn))))))
 
 (defn cursor-word-all [ls uri ln cn]
   (let [line (cursor-line ls uri ln)]
-    (for [m (re.finditer r"[\.\?a-zA-Z0-9_]+" line)]
+    (for [m (re.finditer r"[\.\?\w]+" line)]
       (when (and (<= (m.start) cn) (<= cn (m.end)))
         (return (cut line (m.start) (m.end)))))))
+
+(defn find-and-eval-imports [ls uri]
+  (let [doc (ls.workspace.get_document uri)]
+    (for [m (re.finditer r"\(\s*(import|require)\s+([\w\.]+|\[[\w\.\s\*\?:\[\]]+\])\)" doc.source)]
+      (logger.info (m.group))
+      (try
+        (-> (m.group)
+            (read-str)
+            (eval))
+        (except [e BaseException]
+          (logger.info (+ "import/require failed: " (repr e))))))))
 
 (defclass Server []
   (defn --init-- [self]
@@ -75,7 +86,8 @@
     (with-decorator
       (self.server.feature TEXT_DOCUMENT_DID_OPEN)
       (defn did-open [params]
-        None))
+        (find-and-eval-imports self.server params.text_document.uri)
+        (self.refresh-ns)))
     (with-decorator
       (self.server.feature TEXT_DOCUMENT_DID_CLOSE)
       (defn did-close [params]
@@ -84,5 +96,9 @@
       (self.server.feature TEXT_DOCUMENT_DID_CHANGE)
       (defn did-change [params]
         None)))
+  (defn refresh-ns [self]
+    (self.jedhy.set-namespace :locals- (locals)
+                              :globals- (globals)
+                              :macros- --macros--))
   (defn start [self]
     (self.server.start_io)))
