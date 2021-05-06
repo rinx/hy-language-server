@@ -12,6 +12,8 @@ Note: Currently, these features are available only for Hy's built-in core functi
 - `textDocument/completion`
 - `textDocument/hover`
 
+![hyls-with-nvim-example](https://user-images.githubusercontent.com/1588935/117307829-e2ac6b80-aebb-11eb-9d93-ab6087959d03.gif)
+
 ## Installation
 
 ```sh
