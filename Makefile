@@ -7,7 +7,7 @@ PYSRCS = $(HYSRCS:%.hy=%.py)
 
 .PHONY: clean
 clean:
-	rm -f $(PYSRCS) dist build
+	rm -rf $(PYSRCS) dist build
 	$(PYTHON) setup.py clean --all
 
 .PHONY: build

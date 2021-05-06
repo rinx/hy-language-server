@@ -17,6 +17,8 @@
                           MarkupKind]])
 (import [pygls.server [LanguageServer]])
 
+(import [.jedhy [Jedhy]])
+
 (setv logger (logging.getLogger "hyls.server"))
 
 (defn cursor-line [ls uri ln]
@@ -27,36 +29,26 @@
 
 (defn cursor-word [ls uri ln cn]
   (let [line (cursor-line ls uri ln)]
-    (for [m (re.finditer r"[\.\?\w]+" line)]
+    (for [m (re.finditer r"[\.\?\-\w]+" line)]
       (when (and (<= (m.start) cn) (<= cn (m.end)))
         (return (cut line (m.start) cn))))))
 
 (defn cursor-word-all [ls uri ln cn]
   (let [line (cursor-line ls uri ln)]
-    (for [m (re.finditer r"[\.\?\w]+" line)]
+    (for [m (re.finditer r"[\.\?\-\w]+" line)]
       (when (and (<= (m.start) cn) (<= cn (m.end)))
         (return (cut line (m.start) (m.end)))))))
-
-(defn find-and-eval-imports [ls uri]
-  (let [doc (ls.workspace.get_document uri)]
-    (for [m (re.finditer r"\(\s*(import|require)\s+([\w\.]+|\[[\w\.\s\*\?:\[\]]+\])\)" doc.source)]
-      (logger.info (m.group))
-      (try
-        (-> (m.group)
-            (read-str)
-            (eval))
-        (except [e BaseException]
-          (logger.info (+ "import/require failed: " (repr e))))))))
 
 (defclass Server []
   (defn --init-- [self]
     (setv self.server (LanguageServer))
-    (setv self.jedhy (API))
+    (setv self.jedhy (Jedhy (API) :logger logger))
+    (setv self.imports [])
 
     (with-decorator
       (self.server.feature
         COMPLETION
-        (CompletionOptions))
+        (CompletionOptions :trigger_characters ["."]))
       (defn completions [params]
         (let [word (cursor-word self.server
                                 params.text_document.uri
@@ -86,19 +78,28 @@
     (with-decorator
       (self.server.feature TEXT_DOCUMENT_DID_OPEN)
       (defn did-open [params]
-        (find-and-eval-imports self.server params.text_document.uri)
-        (self.refresh-ns)))
+        (setv self.imports [])
+        (self.find-and-eval-imports self.server params.text_document.uri)
+        (self.jedhy.refresh-ns self.imports)))
     (with-decorator
       (self.server.feature TEXT_DOCUMENT_DID_CLOSE)
       (defn did-close [params]
-        None))
+        (setv self.imports [])))
     (with-decorator
       (self.server.feature TEXT_DOCUMENT_DID_CHANGE)
       (defn did-change [params]
         None)))
-  (defn refresh-ns [self]
-    (self.jedhy.set-namespace :locals- (locals)
-                              :globals- (globals)
-                              :macros- --macros--))
+  (defn find-and-eval-imports [self ls uri]
+    (let [doc (ls.workspace.get_document uri)]
+      (for [m (re.finditer r"\(\s*(import|require)\s+([\w\.]+|\[[\w\.\s\*\?:\[\]]+\])\)" doc.source)]
+        (logger.info (+ "try to evaluate: " (m.group)))
+        (try
+          (-> (m.group)
+              (read-str)
+              (eval))
+          (except [e BaseException]
+            (logger.info (+ "cannot evaluate: " (repr e))))
+          (else
+            (self.imports.append (m.group)))))))
   (defn start [self]
     (self.server.start_io)))
