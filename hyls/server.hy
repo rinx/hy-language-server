@@ -40,7 +40,7 @@
         (return (cut line (m.start) (m.end)))))))
 
 (defclass Server []
-  (defn --init-- [self]
+  (defn __init__ [self]
     (setv self.server (LanguageServer))
     (setv self.jedhy (Jedhy (API) :logger logger))
     (setv self.imports [])
@@ -96,7 +96,7 @@
         (try
           (-> (m.group)
               (read-str)
-              (eval))
+              (hy.eval))
           (except [e BaseException]
             (logger.info (+ "cannot evaluate: " (repr e))))
           (else

@@ -2,7 +2,7 @@
 (import hy)
 
 (defclass Jedhy []
-  (defn --init-- [self jedhy &optional logger]
+  (defn __init__ [self jedhy [logger None]]
     (setv self.jedhy jedhy)
     (setv self.logger logger))
   (defn refresh-ns [self __imports__]
@@ -11,12 +11,12 @@
       (try
         (-> __i__
             (read-str)
-            (eval))
+            (hy.eval))
         (except [e BaseException]
           (self.logger.info (+ "import/require failed: " (repr e))))))
     (self.jedhy.set-namespace :locals- (locals)
                               :globals- (globals)
-                              :macros- --macros--))
+                              :macros- __macros__))
   (defn complete [self prefix-str]
     (self.jedhy.complete prefix-str))
   (defn docs [self candidate-str]
