@@ -16,9 +16,9 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         'argparse',
-        'hy @ git+ssh://git@github.com/hylang/hy',
+        'hy @ git+ssh://git@github.com/hylang/hy.git',
         'pygls',
-        'jedhy @ git+ssh://git@github.com/rinx/jedhy@update/hy-1.0a1'
+        'jedhy @ git+ssh://git@github.com/rinx/jedhy.git@update/hy-1.0a1'
     ],
     entry_points={
         'console_scripts': [
