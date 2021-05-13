@@ -22,6 +22,13 @@ $ pip install hy-language-server
 
 `hyls` will be installed under your PATH.
 
+If you are using Hy 1.0a1, please install the latest main branch.
+
+```sh
+$ pip install git+https://github.com/rinx/hy-language-server.git
+```
+
+
 ## license
 
 MIT

@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='hy-language-server',
-    version='0.0.6',
+    version='0.0.7',
     author='Rintaro Okamura',
     author_email='rintaro.okamura@gmail.com',
     description='hy language server using Jedhy',
@@ -16,9 +16,9 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         'argparse',
-        'hy',
+        'hy @ git+ssh://git@github.com/hylang/hy',
         'pygls',
-        'jedhy'
+        'jedhy @ git+ssh://git@github.com/rinx/jedhy@update/hy-1.0a1'
     ],
     entry_points={
         'console_scripts': [
