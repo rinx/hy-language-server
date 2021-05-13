@@ -13,6 +13,9 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/rinx/hy-language-server',
     packages=['hyls'],
+    package_data={
+        'hyls': ['*.hy', '__pycache__/*']
+    },
     python_requires='>=3.6',
     install_requires=[
         'argparse',
