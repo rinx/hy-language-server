@@ -17,7 +17,7 @@ Note: Currently, these features are available only for Hy's built-in core functi
 ## Installation
 
 ```sh
-$ pip install hy-language-server
+pip install hy-language-server
 ```
 
 `hyls` will be installed under your PATH.
@@ -25,9 +25,9 @@ $ pip install hy-language-server
 If you are using Hy 1.0a1, please install the latest main branch.
 
 ```sh
-$ pip install git+https://github.com/rinx/hy-language-server.git
+pip install git+https://github.com/rinx/jedhy.git@update/hy-1.0a1
+pip install git+https://github.com/rinx/hy-language-server.git
 ```
-
 
 ## license
 
