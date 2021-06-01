@@ -95,7 +95,7 @@
         (logger.info (+ "try to evaluate: " (m.group)))
         (try
           (-> (m.group)
-              (read-str)
+              (hy.read-str)
               (hy.eval))
           (except [e BaseException]
             (logger.info (+ "cannot evaluate: " (repr e))))

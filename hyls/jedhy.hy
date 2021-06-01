@@ -10,7 +10,7 @@
       (self.logger.info (+ "import/require: " __i__))
       (try
         (-> __i__
-            (read-str)
+            (hy.read-str)
             (hy.eval))
         (except [e BaseException]
           (self.logger.info (+ "import/require failed: " (repr e))))))
